@@ -24,7 +24,10 @@ async def stale_callback(callback: CallbackQuery):
 async def on_error(event: ErrorEvent):
     logger.exception("Ошибка обработки: %s", event.exception)
     try:
-        if event.update.message:
+        cb = event.update.callback_query
+        if cb is not None:
+            await cb.answer("⚠️ Сбой сети — попробуй ещё раз через пару секунд", show_alert=True)
+        elif event.update.message is not None:
             await event.update.message.answer("⚠️ Что-то пошло не так. Попробуй ещё раз позже.")
     except Exception:
         pass

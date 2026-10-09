@@ -80,16 +80,21 @@ async def _send_question(message: Message, question: dict, index: int, total: in
 
 @router.callback_query(QuizStates.answering, QuizCB.filter(F.action == "answer"))
 async def answer(callback: CallbackQuery, callback_data: QuizCB, state: FSMContext):
-    data = await state.get_data()
+        data = await state.get_data()
     quiz, index = data["quiz"], data["index"]
     if index >= len(quiz):
         await callback.answer()
         return
+    if data.get("answered_index") == index:          
+        await callback.answer("Этот вопрос уже учтён ✅")
+        return
+
     question = quiz[index]
     is_correct = callback_data.value == question["correct"]
 
     await state.update_data(correct=data["correct"] + int(is_correct),
-                            streak=data["streak"] + 1 if is_correct else 0)
+                            streak=data["streak"] + 1 if is_correct else 0,
+                            answered_index=index)    
 
     if is_correct:
         text = "✅ <b>Верно!</b>"
