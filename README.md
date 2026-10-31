@@ -242,20 +242,46 @@ stateDiagram-v2
 ## 📁 Структура проекта
 
 ```text
-time-travel-bot/
+Time-travel-bot/
 ├── bot/
-│   ├── main.py          # точка входа: Bot, Dispatcher, роутеры
-│   ├── config.py        # конфигурация из .env
-│   ├── states.py        # FSM-состояния
-│   ├── db/              # движок (engine) и ORM-модели (models)
-│   ├── data/            # доменный контент: эпохи, вопросы квиза, факты
-│   ├── handlers/        # start, travel, quiz, profile, leaderboard, common
-│   ├── services/        # клиенты API (europeana, wikipedia), логика (quiz, users, facts)
-│   ├── keyboards/       # inline-клавиатуры и callback-фабрики
-│   └── utils/           # TTL-кэш, retry-декоратор
-├── .env.example         # шаблон переменных окружения (без секретов)
-├── requirements.txt     # зависимости
-├── .gitignore           # venv, .env, кэш, IDE
+│   ├── __init__.py
+│   ├── main.py             # точка входа: Bot, Dispatcher, роутеры, фоновая задача «факта дня»
+│   ├── config.py           # конфигурация из .env
+│   ├── states.py           # FSM-состояния
+│   ├── db/
+│   │   ├── __init__.py
+│   │   ├── engine.py       # async-движок и сессии SQLAlchemy
+│   │   └── models.py       # ORM-модели: users, game_history, badges
+│   ├── data/
+│   │   ├── __init__.py
+│   │   ├── epochs.py       # контент эпох: события, мода, артефакты
+│   │   ├── questions.py    # банк вопросов квиза и сборка раунда (build_quiz)
+│   │   └── facts.py        # факты для «факта дня»
+│   ├── handlers/
+│   │   ├── __init__.py
+│   │   ├── start.py        # /start, главное меню
+│   │   ├── travel.py       # экскурсии по эпохам
+│   │   ├── quiz.py         # квиз «Что существовало тогда?»
+│   │   ├── profile.py      # /profile, /settings
+│   │   ├── leaderboard.py  # /top
+│   │   └── common.py       # /help и обработчик ошибок
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── europeana.py    # Europeana Search API v2 + graceful degradation
+│   │   ├── wikipedia.py    # Wikipedia API + retry
+│   │   ├── quiz_service.py # бонусный фото-вопрос квиза
+│   │   ├── user_service.py # XP, уровни, бейджи, история игр
+│   │   └── facts.py        # выбор факта дня
+│   ├── keyboards/
+│   │   ├── __init__.py
+│   │   └── inline.py       # inline-клавиатуры
+│   └── utils/
+│       ├── __init__.py
+│       ├── cache.py        # TTL-кэш (cachetools)
+│       └── retry.py        # повторные запросы (tenacity)
+├── .env.example            # шаблон переменных окружения (без секретов)
+├── requirements.txt        # зависимости
+├── .gitignore              # venv, .env, кэш, IDE
 └── README.md
 ```
 
