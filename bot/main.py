@@ -20,7 +20,6 @@ async def main() -> None:
     dp = Dispatcher()
     dp.include_routers(start.router, travel.router, quiz.router,
                        profile.router, leaderboard.router, common.router)
-    dp.error.register(on_error) 
 
     asyncio.create_task(daily_fact_task(bot))
     try:
