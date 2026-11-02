@@ -22,6 +22,6 @@ class SimpleTTLCache:
         value = await self.get(key)
         if value is None:
             value = await factory()
-            if value:  # пустые результаты не кэшируем
+            if value:
                 await self.set(key, value)
         return value
