@@ -5,7 +5,6 @@ from cachetools import TTLCache
 
 
 class SimpleTTLCache:
-    """Кэш в памяти с TTL (потокобезопасный для asyncio)."""
 
     def __init__(self, maxsize: int = 128, ttl: int = 3600) -> None:
         self._cache = TTLCache(maxsize=maxsize, ttl=ttl)
